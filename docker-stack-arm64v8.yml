@@ -1,7 +1,7 @@
 version: "3"
 services:
   zoo1:
-    image: zookeeper
+    image: arm64v8/zookeeper
     hostname: zoo1
     ports:
     - 2181:2181
@@ -12,10 +12,10 @@ services:
       placement:
         constraints: [node.hostname == minion-1]
     volumes:
-    - /home/jahn/zookeeper/1:/data
+    - /home/jahn/zookeeper:/data
 
   zoo2:
-    image: zookeeper
+    image: arm64v8/zookeeper
     hostname: zoo2
     ports:
     - 2182:2181
@@ -24,12 +24,12 @@ services:
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zoo3:2888:3888
     deploy:
       placement:
-        constraints: [node.hostname == minion-2]
+        constraints: [node.hostname == minion-3]
     volumes:
-    - /home/jahn/zookeeper/2:/data
+    - /home/jahn/zookeeper:/data
 
   zoo3:
-    image: zookeeper
+    image: arm64v8/zookeeper
     hostname: zoo3
     ports:
     - 2183:2181
@@ -40,7 +40,7 @@ services:
       placement:
         constraints: [node.hostname == minion-4]
     volumes:
-    - /home/jahn/zookeeper/3:/data
+    - /home/jahn/zookeeper:/data
 
 
   kafka-1:
@@ -62,7 +62,7 @@ services:
       KAFKA_NUM_PARTITIONS: 2
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
     volumes:
-    - /home/jahn/kafka/1/:/var/lib/kafka/data
+    - /home/jahn/kafka/:/var/lib/kafka/data
     deploy:
       placement:
         constraints: [node.hostname == minion-1]
@@ -86,10 +86,10 @@ services:
       KAFKA_NUM_PARTITIONS: 2
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
     volumes:
-    - /home/jahn/kafka/2/:/var/lib/kafka/data
+    - /home/jahn/kafka/:/var/lib/kafka/data
     deploy:
       placement:
-        constraints: [node.hostname == minion-2]
+        constraints: [node.hostname == minion-3]
 
   kafka-3:
     image: zeelos/cp-kafka:5.0.0-arm64v8
@@ -110,7 +110,7 @@ services:
       KAFKA_NUM_PARTITIONS: 2
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
     volumes:
-    - /home/jahn/kafka/3/:/var/lib/kafka/data
+    - /home/jahn/kafka/:/var/lib/kafka/data
     deploy:
       placement:
         constraints: [node.hostname == minion-4]
