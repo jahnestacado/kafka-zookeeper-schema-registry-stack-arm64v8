@@ -4,7 +4,7 @@ services:
     image: arm64v8/zookeeper
     hostname: zoo1
     ports:
-    - 2181:2181
+      - 2181:2181
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
@@ -12,13 +12,13 @@ services:
       placement:
         constraints: [node.hostname == minion-1]
     volumes:
-    - /home/jahn/zookeeper:/data
+      - /home/jahn/zookeeper:/data
 
   zoo2:
     image: arm64v8/zookeeper
     hostname: zoo2
     ports:
-    - 2182:2181
+      - 2182:2181
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=0.0.0.0:2888:3888 server.3=zoo3:2888:3888
@@ -26,7 +26,7 @@ services:
       placement:
         constraints: [node.hostname == minion-3]
     volumes:
-    - /home/jahn/zookeeper:/data
+      - /home/jahn/zookeeper:/data
 
   zoo3:
     image: arm64v8/zookeeper
@@ -40,18 +40,18 @@ services:
       placement:
         constraints: [node.hostname == minion-4]
     volumes:
-    - /home/jahn/zookeeper:/data
+      - /home/jahn/zookeeper:/data
 
 
   kafka-1:
     image: zeelos/cp-kafka:5.0.0-arm64v8
     hostname: kafka-1
     depends_on:
-    - zoo1
-    - zoo2
-    - zoo3
+      - zoo1
+      - zoo2
+      - zoo3
     ports:
-    - "19092:19092"
+      - "19092:19092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zoo1:2181,zoo2:2182,zoo3:2183
@@ -63,18 +63,18 @@ services:
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
       KAFKA_LOG_RETENTION_HOURS: 48
     volumes:
-    - /home/jahn/kafka/:/var/lib/kafka/data
+      - /home/jahn/kafka/:/var/lib/kafka/data
     deploy:
       placement:
-      constraints: [node.hostname == minion-1]
+        constraints: [node.hostname == minion-1]
 
   kafka-2:
     image: zeelos/cp-kafka:5.0.0-arm64v8
     hostname: kafka-2
     depends_on:
       - zoo1
-    - zoo2
-    - zoo3
+      - zoo2
+      - zoo3
     ports:
       - "29092:29092"
     environment:
@@ -88,18 +88,18 @@ services:
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
       KAFKA_LOG_RETENTION_HOURS: 48
     volumes:
-    - /home/jahn/kafka/:/var/lib/kafka/data
+      - /home/jahn/kafka/:/var/lib/kafka/data
     deploy:
       placement:
-      constraints: [node.hostname == minion-3]
+        constraints: [node.hostname == minion-3]
 
   kafka-3:
     image: zeelos/cp-kafka:5.0.0-arm64v8
     hostname: kafka-3
     depends_on:
       - zoo1
-    - zoo2
-    - zoo3
+      - zoo2
+      - zoo3
     ports:
       - "39092:39092"
     environment:
@@ -113,7 +113,7 @@ services:
       KAFKA_HEAP_OPTS: -Xmx256M -Xms128M
       KAFKA_LOG_RETENTION_HOURS: 48
     volumes:
-    - /home/jahn/kafka/:/var/lib/kafka/data
+      - /home/jahn/kafka/:/var/lib/kafka/data
     deploy:
       placement:
         constraints: [node.hostname == minion-4]
@@ -122,14 +122,14 @@ services:
     image: zeelos/cp-schema-registry:5.0.0-arm64v8
     hostname: schema-registry
     depends_on:
-    - zoo1
-    - zoo2
-    - zoo3
-    - kafka-1
-    - kafka-2
-    - kafka-3
+      - zoo1
+      - zoo2
+      - zoo3
+      - kafka-1
+      - kafka-2
+      - kafka-3
     ports:
-    - "8085:8085"
+      - "8085:8085"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zoo1:2181,zoo2:2182,zoo3:2183
